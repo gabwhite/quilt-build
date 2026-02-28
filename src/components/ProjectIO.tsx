@@ -36,6 +36,7 @@ export function ProjectIO() {
         alert('Invalid project file — could not parse JSON.')
       }
     }
+    reader.onerror = () => alert('Could not read file.')
     reader.readAsText(file)
     // Reset input so the same file can be re-imported
     e.target.value = ''
