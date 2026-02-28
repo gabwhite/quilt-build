@@ -1,5 +1,6 @@
 import { useQuiltStore } from '../../store/useQuiltStore'
 import { SVGGrid } from './SVGGrid'
+import { ColorPanel } from '../ColorPanel/ColorPanel'
 
 export function BlockEditor() {
   const {
@@ -89,6 +90,7 @@ export function BlockEditor() {
         </label>
 
         <button onClick={clearBlock}>Clear block</button>
+        <ColorPanel />
       </div>
     </div>
   )
