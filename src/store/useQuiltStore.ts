@@ -68,7 +68,10 @@ export const useQuiltStore = create<QuiltStore>((set) => ({
   toolMode: 'fill',
 
   setGridSize: (size) =>
-    set((s) => ({ block: { ...s.block, gridSize: size, cells: makeEmptyGrid(size) } })),
+    set((s) => {
+      if (size === s.block.gridSize) return s
+      return { block: { ...s.block, gridSize: size, cells: makeEmptyGrid(size) } }
+    }),
 
   setFinishedSize: (size) =>
     set((s) => ({ block: { ...s.block, finishedSize: size } })),
@@ -78,16 +81,20 @@ export const useQuiltStore = create<QuiltStore>((set) => ({
 
   fillCell: (row, col, color) =>
     set((s) => {
+      const cell = s.block.cells[row][col]
+      if (cell.shape !== 'square') return s
       const cells = s.block.cells.map((r) => [...r])
-      cells[row][col] = { ...cells[row][col], colors: [color] }
+      cells[row][col] = { ...cell, colors: [color] }
       return { block: { ...s.block, cells } }
     }),
 
   fillHSTTriangle: (row, col, idx, color) =>
     set((s) => {
+      const existing = s.block.cells[row][col]
+      if (existing.shape === 'square') return s
       const cells = s.block.cells.map((r) => [...r])
-      const cell = { ...cells[row][col] }
-      const colors = [...cell.colors] as [string, string]
+      const cell = { ...existing }
+      const colors: [string, string] = [cell.colors[0], cell.colors[1] ?? '#ffffff']
       colors[idx] = color
       cell.colors = colors
       cells[row][col] = cell
@@ -100,6 +107,7 @@ export const useQuiltStore = create<QuiltStore>((set) => ({
       const cell = { ...cells[row][col] }
       if (cell.shape === 'square') {
         cell.shape = 'hst-down'
+        // Second triangle defaults to white; user fills it with the fill tool
         cell.colors = [cell.colors[0], '#ffffff']
       } else if (cell.shape === 'hst-down') {
         cell.shape = 'hst-up'
@@ -154,5 +162,10 @@ export const useQuiltStore = create<QuiltStore>((set) => ({
       return { quiltSettings: { ...s.quiltSettings, rotations } }
     }),
 
-  loadProject: (project) => set(project),
+  loadProject: (project) =>
+    set({
+      ...project,
+      activeColor: project.palette[0] ?? '#000000',
+      toolMode: 'fill',
+    }),
 }))
