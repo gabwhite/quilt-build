@@ -10,6 +10,9 @@ export function ExportPDFButton() {
     setLoading(true)
     try {
       await generatePDF({ block, quiltSettings, palette, grayscale })
+    } catch (error) {
+      console.error('PDF generation failed:', error)
+      alert('Failed to generate PDF. Please try again.')
     } finally {
       setLoading(false)
     }
