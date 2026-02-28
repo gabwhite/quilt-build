@@ -1,4 +1,4 @@
-type View = 'editor' | 'assembler' | 'cutting'
+import type { View } from '../types'
 
 interface NavProps {
   view: View
@@ -12,7 +12,7 @@ export function Nav({ view, onChange }: NavProps) {
     { id: 'cutting', label: 'Cutting Plan' },
   ]
   return (
-    <nav style={{ display: 'flex', gap: 8, padding: '12px 16px', borderBottom: '1px solid #ddd' }}>
+    <nav aria-label="Main navigation" style={{ display: 'flex', gap: 8, padding: '12px 16px', borderBottom: '1px solid #ddd' }}>
       {tabs.map((tab) => (
         <button
           key={tab.id}

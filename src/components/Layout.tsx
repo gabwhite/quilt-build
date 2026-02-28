@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
 import { Nav } from './Nav'
-
-type View = 'editor' | 'assembler' | 'cutting'
+import type { View } from '../types'
 
 export function Layout({
   view,

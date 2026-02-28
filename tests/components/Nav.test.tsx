@@ -15,3 +15,10 @@ test('calls onChange with correct view when tab clicked', async () => {
   await userEvent.click(screen.getByText('Quilt Assembler'))
   expect(onChange).toHaveBeenCalledWith('assembler')
 })
+
+test('sets aria-current only on the active tab', () => {
+  render(<Nav view="editor" onChange={() => {}} />)
+  expect(screen.getByText('Block Editor')).toHaveAttribute('aria-current', 'page')
+  expect(screen.getByText('Quilt Assembler')).not.toHaveAttribute('aria-current')
+  expect(screen.getByText('Cutting Plan')).not.toHaveAttribute('aria-current')
+})

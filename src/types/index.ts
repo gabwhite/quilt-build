@@ -34,3 +34,5 @@ export interface Project {
 export type ToolMode = 'fill' | 'hst'
 // fill: clicking a cell/triangle fills it with active color
 // hst:  clicking cycles cell shape: square → hst-down → hst-up → square
+
+export type View = 'editor' | 'assembler' | 'cutting'

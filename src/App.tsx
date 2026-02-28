@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Layout } from './components/Layout'
-
-type View = 'editor' | 'assembler' | 'cutting'
+import type { View } from './types'
 
 export default function App() {
   const [view, setView] = useState<View>('editor')
