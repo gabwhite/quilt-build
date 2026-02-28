@@ -44,7 +44,7 @@ export function BlockEditor() {
             value={block.finishedSize}
             min={1}
             step={0.5}
-            onChange={(e) => setFinishedSize(Number(e.target.value))}
+            onChange={(e) => { const v = Number(e.target.value); if (!isNaN(v) && v > 0) setFinishedSize(v) }}
           />
         </label>
 
@@ -55,7 +55,7 @@ export function BlockEditor() {
             value={block.seamAllowance}
             min={0.125}
             step={0.125}
-            onChange={(e) => setSeamAllowance(Number(e.target.value))}
+            onChange={(e) => { const v = Number(e.target.value); if (!isNaN(v) && v > 0) setSeamAllowance(v) }}
           />
         </label>
 
