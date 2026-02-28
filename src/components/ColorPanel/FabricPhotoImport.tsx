@@ -40,14 +40,17 @@ export function FabricPhotoImport() {
   async function handleExtractDominant() {
     const img = imgRef.current
     if (!img) return
-    // Dynamic import so color-thief doesn't need types globally
-    const ColorThief = (await import('colorthief')).default
-    const thief = new ColorThief()
-    const dominantPalette = thief.getPalette(img, 5) as [number, number, number][]
-    dominantPalette.forEach(([r, g, b]) => {
-      const hex = rgbToHex(r, g, b)
-      addColor(hex)
-    })
+    try {
+      const ColorThief = (await import('colorthief')).default
+      const thief = new ColorThief()
+      const dominantPalette = thief.getPalette(img, 5) as [number, number, number][]
+      dominantPalette.forEach(([r, g, b]) => {
+        const hex = rgbToHex(r, g, b)
+        addColor(hex)
+      })
+    } catch {
+      console.error('Failed to extract colors from photo')
+    }
   }
 
   return (

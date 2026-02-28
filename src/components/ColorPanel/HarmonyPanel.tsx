@@ -3,6 +3,9 @@ import { useQuiltStore } from '../../store/useQuiltStore'
 
 export function HarmonyPanel() {
   const { activeColor, addColor, setActiveColor } = useQuiltStore()
+  if (!activeColor || !/^#[0-9a-f]{6}$/i.test(activeColor)) {
+    return <div style={{ fontSize: 12, color: '#999' }}>No color selected</div>
+  }
   const harmonies = getHarmonies(activeColor)
 
   const groups = [
