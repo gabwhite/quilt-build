@@ -46,10 +46,6 @@ export function ColorPanel() {
                 setActiveColor(e.target.value)
               }}
             />
-            <div
-              style={{ width: 36, height: 36, backgroundColor: pickerColor, border: '1.5px solid var(--color-border)', borderRadius: 6, flexShrink: 0 }}
-              aria-hidden="true"
-            />
             <button
               className="btn btn-outline"
               style={{ padding: '6px 12px', fontSize: 12 }}
