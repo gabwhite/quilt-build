@@ -54,12 +54,17 @@ export function FabricPhotoImport() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <div style={{ fontWeight: 'bold' }}>Import Fabric Photo</div>
-      <input type="file" accept="image/*" onChange={handleFile} />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div className="section-heading">Import Fabric Photo</div>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFile}
+        style={{ fontSize: 12, color: 'var(--color-muted)' }}
+      />
       {imgSrc && (
         <>
-          <p style={{ fontSize: 12, color: '#666', margin: 0 }}>
+          <p style={{ fontSize: 12, color: 'var(--color-muted)', margin: 0 }}>
             Click anywhere on the photo to sample that color.
           </p>
           <img
@@ -67,10 +72,12 @@ export function FabricPhotoImport() {
             src={imgSrc}
             alt="Fabric photo for color sampling"
             crossOrigin="anonymous"
-            style={{ maxWidth: 240, cursor: 'crosshair', border: '1px solid #ccc' }}
+            style={{ maxWidth: '100%', cursor: 'crosshair', border: '1.5px solid var(--color-border)', borderRadius: 6 }}
             onClick={handleImageClick}
           />
-          <button onClick={handleExtractDominant}>Extract 5 dominant colors</button>
+          <button className="btn btn-outline" onClick={handleExtractDominant}>
+            Extract 5 dominant colors
+          </button>
         </>
       )}
     </div>

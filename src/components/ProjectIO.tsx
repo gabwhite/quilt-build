@@ -44,10 +44,10 @@ export function ProjectIO() {
 
   return (
     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-      <button onClick={handleExport} style={{ fontSize: 13 }}>
+      <button className="btn btn-outline" onClick={handleExport}>
         Save project
       </button>
-      <label style={{ fontSize: 13, cursor: 'pointer' }}>
+      <label className="btn btn-outline" style={{ cursor: 'pointer' }}>
         Load project
         <input
           type="file"

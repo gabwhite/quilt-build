@@ -7,7 +7,6 @@ export function CuttingPlan() {
   const numBlocks = quiltSettings.blocksWide * quiltSettings.blocksTall
   const pieces = analyzePieces(block, numBlocks)
 
-  // Group by color, preserving the sorted order (largest cutSize first within each color)
   const byColor = new Map<string, typeof pieces>()
   for (const piece of pieces) {
     const existing = byColor.get(piece.color) ?? []
@@ -16,18 +15,18 @@ export function CuttingPlan() {
 
   if (pieces.length === 0) {
     return (
-      <div>
+      <div className="cutting-wrap">
         <h2>Cutting Plan</h2>
-        <p style={{ color: '#666' }}>Design a block first to see cutting instructions.</p>
+        <p style={{ color: 'var(--color-muted)' }}>Design a block first to see cutting instructions.</p>
       </div>
     )
   }
 
   return (
-    <div style={{ maxWidth: 600 }}>
-      <h2 style={{ marginTop: 0 }}>Cutting Plan</h2>
-      <p style={{ fontSize: 13, color: '#555', marginBottom: 16 }}>
-        Fabric width: {42}". Seam allowance: {block.seamAllowance}". Cutting largest pieces first.
+    <div className="cutting-wrap">
+      <h2>Cutting Plan</h2>
+      <p style={{ fontSize: 13, color: 'var(--color-muted)', marginBottom: 20, marginTop: 0 }}>
+        Fabric width: 42". Seam allowance: {block.seamAllowance}". Cutting largest pieces first.
         ({numBlocks} blocks: {quiltSettings.blocksWide}×{quiltSettings.blocksTall})
       </p>
       {[...byColor.entries()].map(([color, colorPieces]) => (

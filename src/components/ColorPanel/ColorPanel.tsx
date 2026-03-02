@@ -8,52 +8,35 @@ export function ColorPanel() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div>
-        <div style={{ fontWeight: 'bold', marginBottom: 8 }}>Colors</div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
+        <div className="section-heading">Colors</div>
+        <div className="swatch-grid" style={{ marginBottom: 10 }}>
           {palette.map((color) => (
-            <div key={color} style={{ position: 'relative' }}>
+            <div key={color} className="swatch-wrap">
               <button
                 aria-label={`Select color ${color}`}
                 aria-pressed={color === activeColor}
                 onClick={() => setActiveColor(color)}
+                className="swatch-btn"
                 style={{
-                  width: 36,
-                  height: 36,
                   backgroundColor: color,
-                  border: color === activeColor ? '3px solid #333' : '1px solid #999',
-                  borderRadius: 4,
-                  cursor: 'pointer',
-                  display: 'block',
+                  border: color === activeColor ? '2px solid var(--color-text)' : '1.5px solid var(--color-border)',
                 }}
               />
               <button
                 aria-label={`Remove color ${color}`}
                 onClick={() => removeColor(color)}
-                style={{
-                  position: 'absolute',
-                  top: -6,
-                  right: -6,
-                  width: 16,
-                  height: 16,
-                  borderRadius: '50%',
-                  fontSize: 10,
-                  lineHeight: '14px',
-                  textAlign: 'center',
-                  border: '1px solid #999',
-                  background: '#fff',
-                  cursor: 'pointer',
-                  padding: 0,
-                }}
+                className="swatch-remove"
               >
                 ×
               </button>
             </div>
           ))}
         </div>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          Add color
+        <label className="checkbox-label" style={{ gap: 10 }}>
+          <span style={{ fontSize: 13, color: 'var(--color-muted)' }}>Add color</span>
           <input
             type="color"
+            style={{ width: 36, height: 36, cursor: 'pointer', border: '1.5px solid var(--color-border)', borderRadius: 6, padding: 2 }}
             onChange={(e) => {
               addColor(e.target.value)
               setActiveColor(e.target.value)
@@ -62,7 +45,10 @@ export function ColorPanel() {
         </label>
       </div>
 
+      <hr className="divider" />
       <HarmonyPanel />
+
+      <hr className="divider" />
       <FabricPhotoImport />
     </div>
   )

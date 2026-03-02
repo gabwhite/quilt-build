@@ -19,7 +19,7 @@ export function ExportPDFButton() {
   }
 
   return (
-    <button onClick={handleClick} disabled={loading} style={{ fontSize: 13 }}>
+    <button className="btn btn-primary" onClick={handleClick} disabled={loading}>
       {loading ? 'Generating…' : 'Export PDF'}
     </button>
   )

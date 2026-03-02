@@ -12,12 +12,12 @@ export function Nav({ view, onChange }: NavProps) {
     { id: 'cutting', label: 'Cutting Plan' },
   ]
   return (
-    <nav aria-label="Main navigation" style={{ display: 'flex', gap: 8, padding: '12px 16px', borderBottom: '1px solid #ddd' }}>
+    <nav aria-label="Main navigation" className="nav-tabs">
       {tabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => onChange(tab.id)}
-          style={{ fontWeight: view === tab.id ? 'bold' : 'normal' }}
+          className="nav-tab"
           aria-current={view === tab.id ? 'page' : undefined}
         >
           {tab.label}

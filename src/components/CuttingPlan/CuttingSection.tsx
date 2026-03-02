@@ -6,8 +6,8 @@ const FABRIC_WIDTH = 42
 
 interface CuttingSectionProps {
   color: string
-  pieces: PieceGroup[]   // all pieces for this color, already sorted largest first
-  allPieces: PieceGroup[] // all pieces across all colors (for scrap cross-color suggestions)
+  pieces: PieceGroup[]
+  allPieces: PieceGroup[]
 }
 
 export function CuttingSection({ color, pieces, allPieces }: CuttingSectionProps) {
@@ -17,15 +17,15 @@ export function CuttingSection({ color, pieces, allPieces }: CuttingSectionProps
   const yards = (totalInches / 36).toFixed(2)
 
   return (
-    <div style={{ marginBottom: 24, borderLeft: `6px solid ${color}`, paddingLeft: 12 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+    <div className="cutting-section" style={{ borderLeftColor: color }}>
+      <div className="cutting-section-header">
         <div
-          style={{ width: 20, height: 20, backgroundColor: color, border: '1px solid #ccc', borderRadius: 2 }}
+          style={{ width: 18, height: 18, backgroundColor: color, border: '1px solid var(--color-border)', borderRadius: 3 }}
           aria-hidden="true"
         />
         <strong>{color}</strong>
       </div>
-      <p style={{ margin: '0 0 8px', fontSize: 13, color: '#555' }}>
+      <p className="cutting-total">
         Total: {yards} yd ({totalInches.toFixed(1)}")
       </p>
 
@@ -36,19 +36,17 @@ export function CuttingSection({ color, pieces, allPieces }: CuttingSectionProps
         return (
           <div
             key={`${piece.color}-${piece.cutSize}-${piece.shape}`}
-            style={{ marginBottom: 8, fontSize: 13, paddingLeft: 4 }}
+            className="cutting-piece"
           >
-            <div>
-              <strong>
-                {piece.count}× {piece.cutSize}" {piece.shape === 'hst' ? 'HST starting squares' : 'squares'}
-              </strong>
+            <div className="cutting-piece-title">
+              {piece.count}× {piece.cutSize}" {piece.shape === 'hst' ? 'HST starting squares' : 'squares'}
             </div>
-            <div style={{ color: '#333' }}>
+            <div className="cutting-piece-detail">
               → Cut {plan.stripCount} strip{plan.stripCount > 1 ? 's' : ''} at {piece.cutSize}" × {FABRIC_WIDTH}"
               ({plan.piecesPerStrip} pieces/strip)
             </div>
             {scrap.suggestions.length > 0 && (
-              <div style={{ color: '#777', fontStyle: 'italic' }}>
+              <div className="cutting-piece-scrap">
                 Scrap from last strip: {scrap.leftoverLength.toFixed(1)}" — can sub-cut:
                 {scrap.suggestions.map((s) => (
                   <span key={s.cutSize}> {s.yield}× {s.cutSize}" pieces;</span>

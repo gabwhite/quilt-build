@@ -14,7 +14,6 @@ export function BlockEditor() {
     if (toolMode === 'hst') {
       cycleHST(row, col)
     } else {
-      // fill mode
       const cell = block.cells[row][col]
       if (cell.shape === 'square') {
         fillCell(row, col, activeColor)
@@ -25,54 +24,64 @@ export function BlockEditor() {
   }
 
   return (
-    <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
-      <SVGGrid block={block} grayscale={grayscale} onCellClick={handleCellClick} />
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minWidth: 220 }}>
-        <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          Grid size
-          <select value={block.gridSize} onChange={(e) => setGridSize(Number(e.target.value))}>
+    <div className="view-layout">
+      {/* Controls — left */}
+      <div className="controls-panel">
+        <div className="form-field">
+          <label className="form-label" htmlFor="grid-size">Grid size</label>
+          <select
+            id="grid-size"
+            className="form-select"
+            value={block.gridSize}
+            onChange={(e) => setGridSize(Number(e.target.value))}
+          >
             {[4, 6, 8, 12].map((n) => (
               <option key={n} value={n}>{n}×{n}</option>
             ))}
           </select>
-        </label>
+        </div>
 
-        <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          Finished block size (in)
+        <div className="form-field">
+          <label className="form-label" htmlFor="finished-size">Finished block size (in)</label>
           <input
+            id="finished-size"
+            className="form-input"
             type="number"
             value={block.finishedSize}
             min={1}
             step={0.5}
             onChange={(e) => { const v = Number(e.target.value); if (!isNaN(v) && v > 0) setFinishedSize(v) }}
           />
-        </label>
+        </div>
 
-        <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          Seam allowance (in)
+        <div className="form-field">
+          <label className="form-label" htmlFor="seam-allowance">Seam allowance (in)</label>
           <input
+            id="seam-allowance"
+            className="form-input"
             type="number"
             value={block.seamAllowance}
             min={0.125}
             step={0.125}
             onChange={(e) => { const v = Number(e.target.value); if (!isNaN(v) && v > 0) setSeamAllowance(v) }}
           />
-        </label>
+        </div>
+
+        <hr className="divider" />
 
         <div>
-          <div style={{ fontWeight: 'bold', marginBottom: 4 }}>Tool</div>
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className="section-heading">Tool</div>
+          <div className="tool-group">
             <button
+              className={`btn ${toolMode === 'fill' ? 'btn-active' : 'btn-outline'}`}
               onClick={() => setToolMode('fill')}
-              style={{ fontWeight: toolMode === 'fill' ? 'bold' : 'normal' }}
               aria-pressed={toolMode === 'fill'}
             >
               Fill
             </button>
             <button
+              className={`btn ${toolMode === 'hst' ? 'btn-active' : 'btn-outline'}`}
               onClick={() => setToolMode('hst')}
-              style={{ fontWeight: toolMode === 'hst' ? 'bold' : 'normal' }}
               aria-pressed={toolMode === 'hst'}
             >
               Toggle HST
@@ -80,7 +89,7 @@ export function BlockEditor() {
           </div>
         </div>
 
-        <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <label className="checkbox-label">
           <input
             type="checkbox"
             checked={grayscale}
@@ -89,8 +98,16 @@ export function BlockEditor() {
           Grayscale contrast check
         </label>
 
-        <button onClick={clearBlock}>Clear block</button>
+        <button className="btn btn-outline" onClick={clearBlock}>Clear block</button>
+
+        <hr className="divider" />
+
         <ColorPanel />
+      </div>
+
+      {/* Canvas — right */}
+      <div className="canvas-area">
+        <SVGGrid block={block} grayscale={grayscale} onCellClick={handleCellClick} />
       </div>
     </div>
   )

@@ -15,14 +15,15 @@ export function Layout({
 }) {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid #ddd' }}>
+      <header className="app-header">
+        <span className="app-header-title">Quilt Build</span>
         <Nav view={view} onChange={onViewChange} />
-        <div style={{ marginLeft: 'auto', padding: '0 16px', display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div className="app-header-actions">
           <ProjectIO />
           <ExportPDFButton />
         </div>
       </header>
-      <main style={{ flex: 1, padding: 16 }}>{children}</main>
+      <main style={{ flex: 1 }}>{children}</main>
     </div>
   )
 }

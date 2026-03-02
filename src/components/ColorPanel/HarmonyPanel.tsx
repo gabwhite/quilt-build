@@ -4,7 +4,7 @@ import { useQuiltStore } from '../../store/useQuiltStore'
 export function HarmonyPanel() {
   const { activeColor, addColor, setActiveColor } = useQuiltStore()
   if (!activeColor || !/^#[0-9a-f]{6}$/i.test(activeColor)) {
-    return <div style={{ fontSize: 12, color: '#999' }}>No color selected</div>
+    return <div style={{ fontSize: 12, color: 'var(--color-muted)' }}>No color selected</div>
   }
   const harmonies = getHarmonies(activeColor)
 
@@ -16,12 +16,12 @@ export function HarmonyPanel() {
   ]
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <div style={{ fontWeight: 'bold' }}>Suggestions for {activeColor}</div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div className="section-heading">Suggestions for {activeColor}</div>
       {groups.map(({ label, colors }) => (
-        <div key={label}>
-          <div style={{ fontSize: 12, color: '#666', marginBottom: 4 }}>{label}</div>
-          <div style={{ display: 'flex', gap: 4 }}>
+        <div key={label} className="harmony-group">
+          <div className="harmony-label">{label}</div>
+          <div className="harmony-swatches">
             {colors.map((c) => (
               <button
                 key={c}
@@ -31,14 +31,8 @@ export function HarmonyPanel() {
                   addColor(c)
                   setActiveColor(c)
                 }}
-                style={{
-                  width: 28,
-                  height: 28,
-                  backgroundColor: c,
-                  border: '1px solid #999',
-                  borderRadius: 3,
-                  cursor: 'pointer',
-                }}
+                className="harmony-swatch"
+                style={{ backgroundColor: c }}
               />
             ))}
           </div>
