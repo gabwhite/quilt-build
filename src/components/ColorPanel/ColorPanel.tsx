@@ -34,21 +34,31 @@ export function ColorPanel() {
             </div>
           ))}
         </div>
-        <label className="checkbox-label" style={{ gap: 10 }}>
-          <span style={{ fontSize: 13, color: 'var(--color-muted)' }}>Add color</span>
-          <input
-            type="color"
-            value={pickerColor}
-            style={{ width: 36, height: 36, cursor: 'pointer', border: '1.5px solid var(--color-border)', borderRadius: 6, padding: 2 }}
-            onChange={(e) => {
-              setPickerColor(e.target.value)
-              setActiveColor(e.target.value)
-            }}
-            onBlur={(e) => {
-              addColor(e.target.value)
-            }}
-          />
-        </label>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <span className="form-label">Select colour</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input
+              type="color"
+              value={pickerColor}
+              style={{ width: 36, height: 36, cursor: 'pointer', border: '1.5px solid var(--color-border)', borderRadius: 6, padding: 2, flexShrink: 0 }}
+              onChange={(e) => {
+                setPickerColor(e.target.value)
+                setActiveColor(e.target.value)
+              }}
+            />
+            <div
+              style={{ width: 36, height: 36, backgroundColor: pickerColor, border: '1.5px solid var(--color-border)', borderRadius: 6, flexShrink: 0 }}
+              aria-hidden="true"
+            />
+            <button
+              className="btn btn-outline"
+              style={{ padding: '6px 12px', fontSize: 12 }}
+              onClick={() => addColor(pickerColor)}
+            >
+              Add to palette
+            </button>
+          </div>
+        </div>
       </div>
 
       <hr className="divider" />
