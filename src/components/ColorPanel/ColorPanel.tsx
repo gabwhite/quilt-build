@@ -49,7 +49,7 @@ export function ColorPanel() {
             <button
               className="btn btn-outline"
               style={{ padding: '6px 12px', fontSize: 12 }}
-              onClick={() => addColor(pickerColor)}
+              onClick={() => addColor(activeColor)}
             >
               Add to palette
             </button>

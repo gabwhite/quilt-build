@@ -2,7 +2,7 @@ import { getHarmonies } from '../../lib/colorHarmonies'
 import { useQuiltStore } from '../../store/useQuiltStore'
 
 export function HarmonyPanel() {
-  const { activeColor, addColor, setActiveColor } = useQuiltStore()
+  const { activeColor, setActiveColor } = useQuiltStore()
   if (!activeColor || !/^#[0-9a-f]{6}$/i.test(activeColor)) {
     return <div style={{ fontSize: 12, color: 'var(--color-muted)' }}>No color selected</div>
   }
@@ -27,10 +27,7 @@ export function HarmonyPanel() {
                 key={c}
                 aria-label={`Add color ${c}`}
                 title={c}
-                onClick={() => {
-                  addColor(c)
-                  setActiveColor(c)
-                }}
+                onClick={() => setActiveColor(c)}
                 className="harmony-swatch"
                 style={{ backgroundColor: c }}
               />
