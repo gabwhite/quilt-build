@@ -1,11 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuiltStore } from '../../store/useQuiltStore'
 import { HarmonyPanel } from './HarmonyPanel'
 import { FabricPhotoImport } from './FabricPhotoImport'
 
 export function ColorPanel() {
   const { palette, activeColor, addColor, removeColor, setActiveColor } = useQuiltStore()
-  const [pickerColor, setPickerColor] = useState('#000000')
+  const [pickerColor, setPickerColor] = useState(activeColor || '#000000')
+
+  // Keep picker in sync when activeColor changes externally (e.g. clicking a harmony swatch)
+  useEffect(() => {
+    if (activeColor) setPickerColor(activeColor)
+  }, [activeColor])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
