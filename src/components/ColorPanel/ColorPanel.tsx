@@ -41,15 +41,19 @@ export function ColorPanel() {
               type="color"
               value={pickerColor}
               style={{ width: 36, height: 36, cursor: 'pointer', border: '1.5px solid var(--color-border)', borderRadius: 6, padding: 2, flexShrink: 0 }}
-              onChange={(e) => {
-                setPickerColor(e.target.value)
+              onChange={(e) => setPickerColor(e.target.value)}
+              onBlur={(e) => {
                 setActiveColor(e.target.value)
+                addColor(e.target.value)
               }}
             />
             <button
               className="btn btn-outline"
               style={{ padding: '6px 12px', fontSize: 12 }}
-              onClick={() => addColor(activeColor)}
+              onClick={() => {
+                setActiveColor(pickerColor)
+                addColor(pickerColor)
+              }}
             >
               Add to palette
             </button>
