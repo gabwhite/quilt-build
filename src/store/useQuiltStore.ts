@@ -62,9 +62,9 @@ interface QuiltStore extends Project {
 export const useQuiltStore = create<QuiltStore>((set) => ({
   block: DEFAULT_BLOCK,
   quiltSettings: DEFAULT_QUILT,
-  palette: ['#ffffff', '#000000'],
+  palette: ['#ffffff'],
   grayscale: false,
-  activeColor: '#000000',
+  activeColor: '#ffffff',
   toolMode: 'fill',
 
   setGridSize: (size) =>
