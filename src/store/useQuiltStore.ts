@@ -41,6 +41,8 @@ interface QuiltStore extends Project {
   fillHSTTriangle: (row: number, col: number, idx: 0 | 1, color: string) => void
   cycleHST: (row: number, col: number) => void
   clearBlock: () => void
+  mergeCells: (r1: number, c1: number, r2: number, c2: number) => void
+  unmergeCells: (r: number, c: number) => void
 
   // Palette + tool
   addColor: (color: string) => void
@@ -82,6 +84,7 @@ export const useQuiltStore = create<QuiltStore>((set) => ({
   fillCell: (row, col, color) =>
     set((s) => {
       const cell = s.block.cells[row][col]
+      if (cell.absorbed) return s
       if (cell.shape !== 'square') return s
       const cells = s.block.cells.map((r) => [...r])
       cells[row][col] = { ...cell, colors: [color] }
@@ -121,6 +124,63 @@ export const useQuiltStore = create<QuiltStore>((set) => ({
 
   clearBlock: () =>
     set((s) => ({ block: { ...s.block, cells: makeEmptyGrid(s.block.gridSize) } })),
+
+  mergeCells: (r1, c1, r2, c2) =>
+    set((s) => {
+      const minR = Math.min(r1, r2), maxR = Math.max(r1, r2)
+      const minC = Math.min(c1, c2), maxC = Math.max(c1, c2)
+      const cells = s.block.cells.map((r) => [...r])
+
+      // Un-merge any existing origins within the selection
+      for (let r = minR; r <= maxR; r++) {
+        for (let c = minC; c <= maxC; c++) {
+          const cell = cells[r][c]
+          if (cell.colSpan && cell.rowSpan) {
+            const baseColor = cell.colors[0]
+            for (let dr = 0; dr < cell.rowSpan; dr++) {
+              for (let dc = 0; dc < cell.colSpan; dc++) {
+                const tr = r + dr, tc = c + dc
+                if (tr < cells.length && tc < cells[0].length) {
+                  cells[tr][tc] = { shape: 'square', colors: [baseColor] }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Set origin cell
+      cells[minR][minC] = {
+        shape: 'square',
+        colors: [s.activeColor],
+        colSpan: maxC - minC + 1,
+        rowSpan: maxR - minR + 1,
+      }
+
+      // Mark all other cells in region as absorbed
+      for (let r = minR; r <= maxR; r++) {
+        for (let c = minC; c <= maxC; c++) {
+          if (r === minR && c === minC) continue
+          cells[r][c] = { shape: 'square', colors: [s.activeColor], absorbed: true }
+        }
+      }
+
+      return { block: { ...s.block, cells } }
+    }),
+
+  unmergeCells: (r, c) =>
+    set((s) => {
+      const origin = s.block.cells[r][c]
+      if (!origin.colSpan || !origin.rowSpan) return s
+      const cells = s.block.cells.map((row) => [...row])
+      const baseColor = origin.colors[0]
+      for (let dr = 0; dr < origin.rowSpan; dr++) {
+        for (let dc = 0; dc < origin.colSpan; dc++) {
+          cells[r + dr][c + dc] = { shape: 'square', colors: [baseColor] }
+        }
+      }
+      return { block: { ...s.block, cells } }
+    }),
 
   addColor: (color) =>
     set((s) => ({

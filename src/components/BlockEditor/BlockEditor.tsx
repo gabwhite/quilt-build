@@ -8,11 +8,17 @@ export function BlockEditor() {
     fillCell, fillHSTTriangle, cycleHST,
     setGridSize, setFinishedSize, setSeamAllowance,
     clearBlock, setGrayscale, setToolMode,
+    mergeCells, unmergeCells,
   } = useQuiltStore()
 
   function handleCellClick(row: number, col: number, triangleIdx?: 0 | 1) {
     if (toolMode === 'hst') {
       cycleHST(row, col)
+    } else if (toolMode === 'merge') {
+      const cell = block.cells[row][col]
+      if (cell.colSpan && cell.rowSpan) {
+        unmergeCells(row, col)
+      }
     } else {
       const cell = block.cells[row][col]
       if (cell.shape === 'square') {
@@ -89,6 +95,13 @@ export function BlockEditor() {
             >
               Toggle HST
             </button>
+            <button
+              className={`btn ${toolMode === 'merge' ? 'btn-active' : 'btn-outline'}`}
+              onClick={() => setToolMode('merge')}
+              aria-pressed={toolMode === 'merge'}
+            >
+              Merge
+            </button>
           </div>
         </div>
 
@@ -110,7 +123,13 @@ export function BlockEditor() {
 
       {/* Canvas — right */}
       <div className="canvas-area">
-        <SVGGrid block={block} grayscale={grayscale} onCellClick={handleCellClick} />
+        <SVGGrid
+          block={block}
+          grayscale={grayscale}
+          onCellClick={handleCellClick}
+          toolMode={toolMode}
+          onMerge={(r1, c1, r2, c2) => mergeCells(r1, c1, r2, c2)}
+        />
       </div>
     </div>
   )

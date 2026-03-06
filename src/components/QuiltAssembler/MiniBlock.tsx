@@ -13,9 +13,11 @@ interface MiniCellProps {
 
 function MiniCell({ cell, x, y, size, grayscale }: MiniCellProps) {
   if (cell.shape === 'square') {
+    const width = (cell.colSpan ?? 1) * size
+    const height = (cell.rowSpan ?? 1) * size
     return (
       <rect
-        x={x} y={y} width={size} height={size}
+        x={x} y={y} width={width} height={height}
         fill={resolveColor(cell.colors[0], grayscale)}
         stroke="#ccc"
         strokeWidth={0.3}
@@ -55,16 +57,19 @@ export function MiniBlock({ block, grayscale, rotation = 0, x, y }: MiniBlockPro
   return (
     <g transform={`rotate(${rotation}, ${cx}, ${cy})`}>
       {block.cells.map((row, ri) =>
-        row.map((cell, ci) => (
-          <MiniCell
-            key={`${ri}-${ci}`}
-            cell={cell}
-            x={x + ci * cellSize}
-            y={y + ri * cellSize}
-            size={cellSize}
-            grayscale={grayscale}
-          />
-        ))
+        row.map((cell, ci) => {
+          if (cell.absorbed) return null
+          return (
+            <MiniCell
+              key={`${ri}-${ci}`}
+              cell={cell}
+              x={x + ci * cellSize}
+              y={y + ri * cellSize}
+              size={cellSize}
+              grayscale={grayscale}
+            />
+          )
+        })
       )}
     </g>
   )
