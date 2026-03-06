@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   pdf,
   Document,
@@ -37,7 +36,9 @@ interface PdfCellProps {
 
 function PdfCell({ cell, x, y, size }: PdfCellProps) {
   if (cell.shape === 'square') {
-    return <Rect x={x} y={y} width={size} height={size} fill={cell.colors[0]} stroke="#ccc" strokeWidth={0.3} />
+    const width = (cell.colSpan ?? 1) * size
+    const height = (cell.rowSpan ?? 1) * size
+    return <Rect x={x} y={y} width={width} height={height} fill={cell.colors[0]} stroke="#ccc" strokeWidth={0.3} />
   }
   const [c0, c1] = cell.colors as [string, string]
   let t1: string, t2: string
@@ -62,15 +63,18 @@ function PdfBlock({ project }: { project: Project }) {
   return (
     <Svg width={svgSize} height={svgSize}>
       {block.cells.map((row, ri) =>
-        row.map((cell, ci) => (
-          <PdfCell
-            key={`${ri}-${ci}`}
-            cell={cell}
-            x={ci * CELL_PX}
-            y={ri * CELL_PX}
-            size={CELL_PX}
-          />
-        ))
+        row.map((cell, ci) => {
+          if (cell.absorbed) return null
+          return (
+            <PdfCell
+              key={`${ri}-${ci}`}
+              cell={cell}
+              x={ci * CELL_PX}
+              y={ri * CELL_PX}
+              size={CELL_PX}
+            />
+          )
+        })
       )}
     </Svg>
   )
@@ -116,20 +120,31 @@ function QuiltPDFDocument({ project }: { project: Project }) {
         ) : (
           [...byColor.entries()].map(([color, colorPieces]) => {
             const totalIn = colorPieces.reduce(
-              (sum, p) => sum + calcStrips(p.cutSize, p.count, FABRIC_WIDTH).totalInches,
+              (sum, p) => sum + (p.shape === 'rect'
+                ? calcStrips(p.cutHeight!, p.count, FABRIC_WIDTH, p.cutWidth!)
+                : calcStrips(p.cutSize, p.count, FABRIC_WIDTH)
+              ).totalInches,
               0
             )
             return (
               <View key={color} style={{ marginBottom: 8 }}>
                 <View style={styles.row}>
-                  <Rect style={styles.colorDot as any} fill={color} />
+                  <Rect style={styles.colorDot as any} width={10} height={10} fill={color} />
                   <Text>{color} — {(totalIn / 36).toFixed(2)} yd</Text>
                 </View>
                 {colorPieces.map((p) => {
-                  const plan = calcStrips(p.cutSize, p.count, FABRIC_WIDTH)
+                  const plan = p.shape === 'rect'
+                    ? calcStrips(p.cutHeight!, p.count, FABRIC_WIDTH, p.cutWidth!)
+                    : calcStrips(p.cutSize, p.count, FABRIC_WIDTH)
+                  const label = p.shape === 'rect'
+                    ? `${p.cutWidth}"×${p.cutHeight}" rect`
+                    : `${p.cutSize}" ${p.shape === 'hst' ? 'HST sq' : 'sq'}`
+                  const key = p.shape === 'rect'
+                    ? `${p.color}-${p.cutWidth}-${p.cutHeight}-rect`
+                    : `${p.color}-${p.cutSize}-${p.shape}`
                   return (
-                    <Text key={`${p.color}-${p.cutSize}-${p.shape}`} style={{ marginLeft: 16, marginBottom: 2 }}>
-                      {p.count}× {p.cutSize}" {p.shape === 'hst' ? 'HST sq' : 'sq'}: {plan.stripCount} strip{plan.stripCount > 1 ? 's' : ''} × {p.cutSize}" ({plan.piecesPerStrip}/strip)
+                    <Text key={key} style={{ marginLeft: 16, marginBottom: 2 }}>
+                      {p.count}× {label}: {plan.stripCount} strip{plan.stripCount > 1 ? 's' : ''} × {p.shape === 'rect' ? p.cutHeight : p.cutSize}" ({plan.piecesPerStrip}/strip)
                     </Text>
                   )
                 })}
