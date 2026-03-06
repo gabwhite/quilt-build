@@ -29,16 +29,19 @@ export function BlockEditor() {
       <div className="controls-panel">
         <div className="form-field">
           <label className="form-label" htmlFor="grid-size">Grid size</label>
-          <select
+          <input
             id="grid-size"
-            className="form-select"
+            className="form-input"
+            type="number"
             value={block.gridSize}
-            onChange={(e) => setGridSize(Number(e.target.value))}
-          >
-            {[4, 6, 8, 12].map((n) => (
-              <option key={n} value={n}>{n}×{n}</option>
-            ))}
-          </select>
+            min={2}
+            max={24}
+            step={1}
+            onChange={(e) => {
+              const v = Math.round(Number(e.target.value))
+              if (!isNaN(v) && v >= 2 && v <= 24) setGridSize(v)
+            }}
+          />
         </div>
 
         <div className="form-field">
